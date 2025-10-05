@@ -19,7 +19,8 @@ ENV PATH="/home/mediaflow_proxy/.local/bin:$PATH"
 USER mediaflow_proxy
 
 # Install Poetry
-RUN pip install --user --no-cache-dir poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
 
 # Copy only requirements to cache them in docker layer
 COPY --chown=mediaflow_proxy:mediaflow_proxy pyproject.toml poetry.lock* /mediaflow_proxy/
