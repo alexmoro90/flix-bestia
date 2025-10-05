@@ -12,15 +12,14 @@ WORKDIR /mediaflow_proxy
 RUN useradd -m mediaflow_proxy
 RUN chown -R mediaflow_proxy:mediaflow_proxy /mediaflow_proxy
 
-# Set up the PATH to include the user's local bin
+# Set up the PATH to include the user's local bin (Questa riga è corretta!)
 ENV PATH="/home/mediaflow_proxy/.local/bin:$PATH"
 
 # Switch to non-root user
 USER mediaflow_proxy
 
-# Install Poetry
+# --- CORREZIONE 1: Usa il metodo ufficiale per installare Poetry ---
 RUN curl -sSL https://install.python-poetry.org | python3 -
-ENV PATH="/root/.local/bin:$PATH"
 
 # Copy only requirements to cache them in docker layer
 COPY --chown=mediaflow_proxy:mediaflow_proxy pyproject.toml poetry.lock* /mediaflow_proxy/
@@ -30,7 +29,9 @@ RUN poetry config virtualenvs.in-project true \
     && poetry install --no-interaction --no-ansi --no-root --only main
 
 # Copy project files
-COPY --chown=mediaflow_proxy:mediaflow_proxy . /mediaflow_proxy
+COPY --chown=mediaflow_proxy:mediaflow_proxy . /mediaflow_proxy/
+
+# --- CORREZIONE 2: La riga errata è stata rimossa da qui ---
 
 # Expose the port the app runs on
 EXPOSE 8888
